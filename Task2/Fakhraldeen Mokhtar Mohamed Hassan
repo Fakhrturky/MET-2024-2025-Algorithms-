@@ -1,0 +1,34 @@
+def calculate_conflict_cost(schedule, conflict_table):
+    total_cost = 0
+    for conflict in conflict_table:
+        sub1_index = schedule.index(conflict['course_id'])
+        sub2_index = schedule.index(conflict['conflicting_course_id'])
+        if abs(sub1_index - sub2_index) <= 1:
+            total_cost += conflict['conflict_weight']
+    return total_cost
+
+def generate_initial_schedule(subjects, levels):
+    return sorted(subjects, key=lambda x: levels[x])
+
+conflict_table = [
+    {'course_id': 100, 'conflicting_course_id': 200, 'conflict_weight': 30},
+    {'course_id': 100, 'conflicting_course_id': 300, 'conflict_weight': 15},
+    {'course_id': 200, 'conflicting_course_id': 300, 'conflict_weight': 20}
+]
+
+subject_levels = [
+    {'course_id': 100, 'level': 1},
+    {'course_id': 200, 'level': 2},
+    {'course_id': 300, 'level': 3}
+]
+
+subjects_per_level = 6
+
+courses = [course['course_id'] for course in subject_levels]
+levels = {course['course_id']: course['level'] for course in subject_levels}
+initial_schedule = generate_initial_schedule(courses, levels)
+
+initial_cost = calculate_conflict_cost(initial_schedule, conflict_table)
+
+print("Initial Schedule:", initial_schedule)
+print("Initial Conflict Cost:", initial_cost)
